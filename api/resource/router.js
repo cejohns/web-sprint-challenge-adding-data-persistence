@@ -13,13 +13,18 @@ router.post('/', async (req, res) => {
     return res.status(400).json({ message: 'Missing required fields' });
   }
   try {
+    // Create a new resource and store the result
     const newResource = await Resource.create(req.body);
+
+    // Return the newly created resource
     res.status(201).json(newResource);
   } catch (error) {
     console.error('Failed to create resource:', error);
     res.status(500).json({ message: 'Failed to create resource', error: error.message });
   }
 });
+
+
 
 
 
