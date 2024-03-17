@@ -1,7 +1,10 @@
 // build your `Resource` model here
 
-// models/Resource.js
+
 const knex = require('../../db'); // This path goes up two levels from the model to the root
+  
+
+
 const Resource = {
   // Create a new resource
   async create({ resource_name, resource_description }) {
