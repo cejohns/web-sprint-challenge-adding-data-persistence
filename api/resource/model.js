@@ -8,12 +8,39 @@ const knex = require('../../db'); // This path goes up two levels from the model
 const Resource = {
   // Create a new resource
   async create({ resource_name, resource_description }) {
-    const [resource_id] = await knex('resources').insert({
-      resource_name,
-      resource_description,
-    }, 'resource_id'); // Ensuring 'resource_id' is returned after the insert operation
-    return this.findById(resource_id);
+    let insertedResource;
+    try {
+      // Execute the insert operation
+      const result = await knex('resources').insert({
+        resource_name,
+        resource_description,
+      }, 'resource_id');
+
+      // Assuming 'result' is an array containing the 'resource_id' of the newly inserted resource.
+      // This assumption needs to be verified based on the behavior of your specific database.
+      const resource_id = Array.isArray(result) ? result[0] : result;
+
+      // Ensure the 'resource_id' is valid
+      if (!resource_id) {
+        throw new Error("Failed to retrieve 'resource_id' after resource creation.");
+      }
+
+      // Retrieve the full resource record by its 'resource_id'
+      insertedResource = await this.findById(resource_id);
+
+    } catch (error) {
+      console.error("Error creating resource:", error);
+      throw new Error("Failed to create resource.");
+    }
+
+    // Check if the resource was successfully retrieved
+    if (!insertedResource) {
+      throw new Error("Failed to retrieve the newly created resource.");
+    }
+
+    return insertedResource;
   },
+
 
   // Find a resource by ID
   async findById(resource_id) {

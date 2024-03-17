@@ -7,6 +7,8 @@ const router = express.Router();
 const Resource = require('./model'); // Corrected path for the Resource model
 
 
+
+
 // POST /api/resources - Create a new resource
 router.post('/', async (req, res) => {
   const { resource_name, resource_description } = req.body;
@@ -18,8 +20,13 @@ router.post('/', async (req, res) => {
     // and returns the newly created resource object
     const newResource = await Resource.create({
       resource_name,
-      resource_description: resource_description  // Explicitly set to null if undefined
+      resource_description: resource_description || null // Explicitly set to null if undefined
     })
+
+    if (!newResource) {
+      console.error("Resource creation returned null:", newResource);
+      return res.status(500).json({ message: 'Resource creation failed' });
+    }
 
     // Debugging log to check what you're about to return
     console.log("New Resource Created:", newResource);
