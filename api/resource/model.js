@@ -7,29 +7,31 @@ const knex = require('../../db'); // This path goes up two levels from the model
 
 const Resource = {
   // Create a new resource
-  async create({ resource_name, resource_description }) {
+  async create({  resource_name, resource_description }) {
     try {
-      const [newResourceId] = await knex('resources').insert({
+      const [resource_id] = await knex('resources').insert({
         resource_name,
         resource_description,
-      }, 'resource_id');
-  
-      console.log(newResourceId);
+      }).returning('resource_id');
+
       
-      if (!newResourceId) {
+  
+      console.log(resource_name);
+      
+      /*if (!newResourceId) {
         throw new Error("Failed to retrieve 'resource_id' after resource creation.");
-      }
+      }*/
 
 
       // Retrieve the newly created resource from the database
-      const resource = await knex('resources').where({ resource_id: newResourceId }).first();
+      //const resource = await knex('resources').where({ resource_id: newResourceId }).first();
 
-      if (!resource) {
+      /*if (!resource) {
         throw new Error("Failed to retrieve the newly created resource.");
-      }
+      }*/
 
       // Return the full resource object
-      return resource;
+      return knex('resources').where({ resource_name }).first();
     } catch (error) {
       console.error("Error creating resource:", error);
       throw new Error("Failed to create resource.");

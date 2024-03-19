@@ -23,18 +23,13 @@ router.post('/', async (req, res) => {
       resource_description: resource_description || null // Explicitly set to null if undefined
     })
 
-    /*if (!newResource) {
+    if (!newResource) {
       console.error("Resource creation returned null:", newResource);
       return res.status(500).json({ message: 'Resource creation failed' });
-    }*/
+    }
 
-    const response = { resource_name: newResource.resource_name };
-
-    // Debugging log to check what you're about to return
-    console.log("New Resource Created:", response);
-    res.status(201).json(response);
-    // Ensure the response is sent back as a JSON object
-    //res.status(201).json(newResource);
+    console.log("New Resource Created:", newResource);
+    res.status(201).json(newResource); // Changed to return the full newResource object
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Failed to create resource', error: error.message });
